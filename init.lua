@@ -167,6 +167,18 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- Show error message inline
+vim.diagnostic.config {
+  virtual_text = {
+    prefix = '■', -- could also be "●", "▎", "x"
+    spacing = 2,
+  },
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+}
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -190,8 +202,23 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- TELESCOPE MAPPINGS
 -- TODO toggle telescope
 vim.keymap.set('n', '<leader>tt', '<cmd>TodoTelescope<cr>', { desc = 'Telescope TODO comments' })
+vim.keymap.set('n', '<leader>to', '<cmd>Telescope lsp_document_symbols<cr>', { desc = '[T]elescope [O]utline (LSP Symbols)' })
+--
+
+-- Normal mode: move current line
+vim.keymap.set('n', '<C-j>', function()
+  return ':m .+' .. vim.v.count1 .. '<CR>=='
+end, { expr = true, silent = true, desc = 'Move line down' })
+vim.keymap.set('n', '<C-k>', function()
+  return ':m .-' .. (vim.v.count1 + 1) .. '<CR>=='
+end, { expr = true, silent = true, desc = 'Move line up' })
+
+-- Visual mode: move selected block
+vim.keymap.set('x', '<C-j>', ":m '>+1<CR>gv=gv", { silent = true, desc = 'Move block down' })
+vim.keymap.set('x', '<C-k>', ":m '<-2<CR>gv=gv", { silent = true, desc = 'Move block up' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
